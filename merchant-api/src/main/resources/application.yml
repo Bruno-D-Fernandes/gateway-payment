@@ -1,0 +1,7 @@
+spring:
+    application:
+      name: merchant-api
+    datasources:
+      username:
+      password:
+      url:
