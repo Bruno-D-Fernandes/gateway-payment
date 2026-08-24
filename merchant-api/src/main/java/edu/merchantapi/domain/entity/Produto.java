@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = )
+@Table(name = "product_tb")
 public class Produto {
 
     @Id
@@ -20,10 +20,10 @@ public class Produto {
     @Column(name = "uuid")
     private String uuid;
 
-    @Column(name = "")
+    @Column(name = "product_name")
     private String name;
 
-    @Column()
+    @Column(name = "product_name")
     private BigDecimal valorUnidade;
 
     // Não está no escopo do projeto

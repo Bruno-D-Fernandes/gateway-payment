@@ -1,6 +1,6 @@
 package edu.merchantapi.messaging.eventsContract;
 
-import edu.merchantapi.domain.entity.Produto;
+import edu.merchantapi.dto.CompraQuantidadeDtoCONTRACT;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class PedidoCriadoEvent implements Serializable {
     String idVenda;
-    List<Produto> itens;
+    List<CompraQuantidadeDtoCONTRACT> itens;
     LocalDateTime createdAt;
 }
