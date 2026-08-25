@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,5 +28,8 @@ public class Venda {
 
     @Column(name = "rapend_at")
     private LocalDateTime rapendAt;
+
+    @Column(name = "total")
+    private BigDecimal total;
 
 }
