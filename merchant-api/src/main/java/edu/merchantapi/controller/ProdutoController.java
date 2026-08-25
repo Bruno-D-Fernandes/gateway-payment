@@ -22,11 +22,18 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    public ResponseEntity criarCompra(@RequestBody List<CompraQuantidadeDtoCONTRACT> CompraDto){
+    public ResponseEntity criarListaCompra(@RequestBody CompraQuantidadeDtoCONTRACT CompraDto){
         produtoService.criarPedido(CompraDto);
 
 
         return ResponseEntity.ok().build();
     }
+
+//    public ResponseEntity criarCompra(@RequestBody List<CompraQuantidadeDtoCONTRACT> CompraDto){
+//        produtoService.criarPedido(CompraDto);
+//
+//
+//        return ResponseEntity.ok().build();
+//    }
 
 }
