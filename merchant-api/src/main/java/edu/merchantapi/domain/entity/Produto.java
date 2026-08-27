@@ -23,8 +23,8 @@ public class Produto {
     @Column(name = "product_name")
     private String name;
 
-    @Column(name = "product_name")
-    private BigDecimal valorUnidade;
+    @Column(name = "value")
+    private BigDecimal value;
 
     // Não está no escopo do projeto
 //    private List<String> uriImagens;
