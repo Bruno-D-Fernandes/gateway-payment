@@ -18,24 +18,57 @@ services:
       retries: 3
       start_period: 20s
 
-  backend:
+  stock-api:
+    build: ./stock
+    ports: ["8081:8081"]
+    depends_on:
+      stock-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://stock-db:3306/stock_db
+      - SPRING_DATASOURCE_USERNAME=Bruno
+      - SPRING_DATASOURCE_PASSWORD=Bruno2310
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_USERNAME=admin
+      - SPRING_RABBITMQ_PASSWORD=12345
+
+
+  stock-db:
+    image: mysql:latest
+    ports: ["3307:3306"]
+    environment:
+      - MYSQL_ROOT_PASSWORD=RootPassword
+      - MYSQL_USER=Bruno
+      - MYSQL_PASSWORD=Bruno2310
+      - MYSQL_DATABASE=stock_db
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+
+
+  merchant-api:
     build: ./merchant-api
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/merchant_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_URL=jdbc:mysql://merchant-db:3306/merchant_db
       - SPRING_DATASOURCE_USERNAME=Bruno
       - SPRING_DATASOURCE_PASSWORD=Bruno2310
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_RABBITMQ_USERNAME=admin
       - SPRING_RABBITMQ_PASSWORD=12345
     depends_on:
-      db:
+      merchant-db:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
-  db:
+  merchant-db:
     image: mysql:8.0.46
     environment:
       - MYSQL_ROOT_PASSWORD=RootPassword
@@ -51,7 +84,7 @@ services:
       timeout: 10s
       interval: 10s
       retries: 10
-      start_period: 20s
+      start_period: 30s
 
 volumes:
   mysql_data:
