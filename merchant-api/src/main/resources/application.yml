@@ -1,5 +1,16 @@
 spring:
-    application:
-      name: merchant-api
-    jpa:
-      ddl-auto: update
+  application:
+    name: merchant-api
+  datasource:
+    url: jdbc:mysql://db:3306/merchant_db
+    username: Bruno
+    password: Bruno2310
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    url: jdbc:mysql://db:3306/merchant_db
+    user: Bruno
+    password: Bruno2310
+    baseline-on-migrate: true
+    baseline-version: '0'

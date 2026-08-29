@@ -3,6 +3,7 @@ package edu.merchantapi.domain.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -12,16 +13,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "sales_tb")
 public class Venda {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @JoinColumn(name = "id_produto")
-    @ManyToOne
-    private Produto produto;
+    @GeneratedValue(strategy =  GenerationType.UUID)
+    @Column(name = "uuid")
+    private String uuid;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -29,7 +28,10 @@ public class Venda {
     @Column(name = "rapend_at")
     private LocalDateTime rapendAt;
 
-    @Column(name = "total")
-    private BigDecimal total;
+    @Column(name = "total_value")
+    private BigDecimal totalValue;
 
+    @JoinColumn(name = "id_produto")
+    @ManyToOne
+    private Produto product;
 }
