@@ -4,8 +4,8 @@ services:
     container_name: rabbitmq
     restart: always
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
     volumes:
       - ./dados:/var/lib/rabbitmq/
     environment:
@@ -23,9 +23,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/merchant_db
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/merchant_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=Bruno
       - SPRING_DATASOURCE_PASSWORD=Bruno2310
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_USERNAME=admin
+      - SPRING_RABBITMQ_PASSWORD=12345
     depends_on:
       db:
         condition: service_healthy
@@ -33,7 +36,7 @@ services:
         condition: service_healthy
 
   db:
-    image: mysql:latest
+    image: mysql:8.0.46
     environment:
       - MYSQL_ROOT_PASSWORD=RootPassword
       - MYSQL_USER=Bruno
@@ -41,8 +44,14 @@ services:
       - MYSQL_DATABASE=merchant_db
     ports:
       - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping"]
-      timeout: 5s
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      timeout: 10s
       interval: 10s
       retries: 10
+      start_period: 20s
+
+volumes:
+  mysql_data:
