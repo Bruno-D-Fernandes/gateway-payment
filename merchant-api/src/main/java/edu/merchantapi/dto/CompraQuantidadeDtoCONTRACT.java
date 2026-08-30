@@ -1,6 +1,4 @@
-package edu.merchantapi.dto;
-
-import edu.merchantapi.domain.entity.Produto;
+package edu.contracts.dto;
 
 import java.math.BigDecimal;
 
