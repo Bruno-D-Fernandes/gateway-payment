@@ -1,11 +1,17 @@
 package edu.merchantapi.config.rabbitmq;
 
+import edu.merchantapi.messaging.events.PedidoCriadoEvent;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.support.converter.DefaultClassMapper;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class RabbitMQConfig {
@@ -48,5 +54,19 @@ public class RabbitMQConfig {
     @Bean
     public Binding merchantUpdateEstoqueBinding(){
         return BindingBuilder.bind(merchantUpdateEstoqueQueue()).to(exchange()).with("estoque.reposicao");
+    }
+
+    // todo understand how it works
+    @Bean
+    public JacksonJsonMessageConverter jsonMessageConverter() {
+        JacksonJsonMessageConverter converter = new JacksonJsonMessageConverter();
+
+        DefaultClassMapper classMapper = new DefaultClassMapper();
+        Map<String, Class<?>> idClassMapping = new HashMap<>();
+        idClassMapping.put("PedidoCriadoEvent", PedidoCriadoEvent.class);
+        classMapper.setIdClassMapping(idClassMapping);
+
+        converter.setClassMapper(classMapper);
+        return converter;
     }
 }

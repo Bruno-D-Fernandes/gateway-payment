@@ -1,4 +1,4 @@
-package edu.contracts.dto;
+package edu.merchantapi.dto;
 
 import java.math.BigDecimal;
 

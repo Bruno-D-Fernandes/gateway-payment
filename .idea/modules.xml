@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/gateway-payment.iml" filepath="$PROJECT_DIR$/.idea/gateway-payment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/estoque/src/main/main.iml" filepath="$PROJECT_DIR$/estoque/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/merchant-api/src/main/main2.iml" filepath="$PROJECT_DIR$/merchant-api/src/main/main2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/estoque/src/test/test.iml" filepath="$PROJECT_DIR$/estoque/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/merchant-api/src/test/test2.iml" filepath="$PROJECT_DIR$/merchant-api/src/test/test2.iml" />
     </modules>
   </component>
 </project>

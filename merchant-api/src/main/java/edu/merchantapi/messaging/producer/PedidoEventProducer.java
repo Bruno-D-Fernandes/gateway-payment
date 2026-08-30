@@ -1,7 +1,7 @@
 package edu.merchantapi.messaging.producer;
 
 import edu.merchantapi.config.rabbitmq.RabbitMQConfig;
-import edu.merchantapi.messaging.eventsContract.PedidoCriadoEvent;
+import edu.merchantapi.messaging.events.PedidoCriadoEvent;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
