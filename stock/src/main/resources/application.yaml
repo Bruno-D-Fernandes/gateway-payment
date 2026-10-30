@@ -1,3 +1,5 @@
 spring:
   application:
     name: stock
+  jpa:
+    ddl-auto: none

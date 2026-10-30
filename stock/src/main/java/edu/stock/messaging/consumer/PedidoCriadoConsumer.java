@@ -9,18 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class PedidoCriadoConsumer {
 
-    private final RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    public PedidoCriadoConsumer(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
-
-    @RabbitListener(queues = "estoque.queue")
+    // Adicione o containerFactory apontando para o Bean que criamos!
+    @RabbitListener(
+            queues = "estoque.queue",
+            containerFactory = "rabbitListenerContainerFactory"
+    )
     public void estoqueQueue(PedidoCriadoEvent event){
-
-
-
+        System.out.println("Recebido com sucesso em JSON: " + event);
     }
-
 }

@@ -1,29 +1,67 @@
 package edu.stock.config.rabbitmq;
 
-import edu.stock.messaging.events.PedidoCriadoEvent;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.support.converter.DefaultClassMapper;
-import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
+import org.springframework.amqp.support.converter.Jackson2JavaTypeMapper;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class RabbitMQConfig {
 
     private static final String EXCHANGE = "item.exchange";
 
+    // =========================================================
+    // CONFIGURAÇÃO DO CONVERSOR JSON
+    // =========================================================
+
+    @Bean
+    public MessageConverter jsonMessageConverter() {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
+        DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
+        converter.setTypePrecedence(Jackson2JavaTypeMapper.TypePrecedence.INFERRED);
+
+        typeMapper.setTrustedPackages("*");
+        converter.setJavaTypeMapper(typeMapper);
+        return converter;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(messageConverter);
+        return template;
+    }
+
+    // AQUI ESTÁ O SEGREDO PARA O CONSUMER:
+    // Isso obriga o @RabbitListener a usar o jsonMessageConverter configurado acima
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+            ConnectionFactory connectionFactory,
+            MessageConverter messageConverter) {
+
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(messageConverter);
+        return factory;
+    }
+
+    // =========================================================
+    // EXCHANGES, FILAS E BINDINGS
+    // =========================================================
+
     @Bean
     public TopicExchange exchange(){
         return new TopicExchange(EXCHANGE);
     }
-
-    // here i will receive the messages
 
     @Bean
     public Queue estoqueQueue(){
@@ -35,8 +73,6 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(estoqueQueue()).to(exchange()).with("venda.*");
     }
 
-
-    // From here to merchant-api
     @Bean
     public Queue merchantQueue(){
         return new Queue("merchant.queue");
@@ -47,7 +83,6 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(merchantQueue()).to(exchange()).with("estoque.atualizado");
     }
 
-    // From here to merchant-api
     @Bean
     public Queue merchantUpdateEstoqueQueue(){
         return new Queue("merchant.estoque.update");
@@ -57,8 +92,5 @@ public class RabbitMQConfig {
     public Binding merchantUpdateEstoqueBinding(){
         return BindingBuilder.bind(merchantUpdateEstoqueQueue()).to(exchange()).with("estoque.reposicao");
     }
-
-
-
 
 }
